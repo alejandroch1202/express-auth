@@ -11,7 +11,7 @@ const {
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+const { checkApiKey } = require('./middlewares/auth.handler');
 app.use(express.json());
 
 const whitelist = ['http://localhost:8080', 'https://myapp.co'];
@@ -25,9 +25,14 @@ const options = {
   },
 };
 app.use(cors(options));
+require('./utils/auth');
 
 app.get('/', (req, res) => {
   res.send('Hi from my Express server');
+});
+
+app.get('/test', checkApiKey, (req, res) => {
+  res.send('Hi from the test endpoint');
 });
 
 routerApi(app);
