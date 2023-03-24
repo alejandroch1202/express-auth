@@ -1,4 +1,5 @@
 const express = require('express');
+const possport = require('passport');
 
 const CustomerService = require('../services/customers.service');
 const validationHandler = require('../middlewares/validator.handler');
@@ -11,7 +12,7 @@ const {
 const router = express.Router();
 const service = new CustomerService();
 
-router.get('/',  async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     res.json(await service.find());
   } catch (error) {
@@ -19,7 +20,9 @@ router.get('/',  async (req, res, next) => {
   }
 });
 
-router.post('/',
+router.post(
+  '/',
+  possport.authenticate('jwt', { session: false }),
   validationHandler(createCustomerSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -31,7 +34,9 @@ router.post('/',
   }
 );
 
-router.patch('/:id',
+router.patch(
+  '/:id',
+  possport.authenticate('jwt', { session: false }),
   validationHandler(getCustomerSchema, 'params'),
   validationHandler(updateCustomerSchema, 'body'),
   async (req, res, next) => {
@@ -45,7 +50,9 @@ router.patch('/:id',
   }
 );
 
-router.delete('/:id',
+router.delete(
+  '/:id',
+  possport.authenticate('jwt', { session: false }),
   validationHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {

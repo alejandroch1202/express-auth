@@ -1,4 +1,5 @@
 const express = require('express');
+const possport = require('passport');
 
 const OrderService = require('../services/order.service');
 const validatorHandler = require('../middlewares/validator.handler');
@@ -27,6 +28,7 @@ router.get(
 
 router.post(
   '/',
+  possport.authenticate('jwt', { session: false }),
   validatorHandler(createOrderSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -41,6 +43,7 @@ router.post(
 
 router.post(
   '/add-item',
+  possport.authenticate('jwt', { session: false }),
   validatorHandler(addItemSchema, 'body'),
   async (req, res, next) => {
     try {
